@@ -6,7 +6,7 @@ static const int MAX = 200000;
 void trace(int data[], int n) {
   cout << data[0];
   for (int i = 1; i < n; i++) {
-    //cout << " " << data[i];
+    // cout << " " << data[i];
     printf("%2d ", data[i]);
   }
   cout << endl;
@@ -38,7 +38,7 @@ int main() {
     sorted[i] = data[i];
   }
   sort(sorted, sorted + n);
-  trace(data, n);
+  int allmin = sorted[0];
   int total = 0;
   for (int i = 0; i < n; i++) {
     int ans = sorted[i];
@@ -47,20 +47,20 @@ int main() {
       continue;
 
     int count = 0;
-    int min = x;
+    int cyclemin = x;
     int sum = x;
     while (ans != x) {
       int j = bsearch(sorted, x, 0, n - 1);
       swap(x, data[j]);
       sum += x;
-      if (x < min)
-        min = x;
+      cyclemin = min(x, cyclemin);
       count++;
     }
     data[i] = x;
-    total += sum + (count - 1) * min;
+    int cost1 = sum + (count - 1) * cyclemin;
+    int cost2 = cost1 + 2 * (cyclemin + allmin) - count * (cyclemin - allmin);
+    total += min(cost1, cost2);
   }
 
   cout << total << endl;
-  trace(sorted, n);
 }
